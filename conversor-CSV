@@ -1,0 +1,27 @@
+from pathlib import Path
+import pandas as pd
+
+# Define o Path
+caminho_arquivo = Path(r"C:\Users\Downloads\Caminho_de_arquivo.csv")
+
+# Verifica se existe
+if not caminho_arquivo.exists():
+    print(f"\n❌ Arquivo não encontrado: {caminho_arquivo}\n")
+
+else:
+    print(f"\n☑️ Lendo: {caminho_arquivo.name}\n")
+    
+    # Lê o CSV
+    df = pd.read_csv(caminho_arquivo, encoding="latin1", sep=";", dtype=str)
+    
+    # Padroniza Colunas
+    df.columns = df.columns.str.strip().str.lower()    
+    
+    # Converte coluna numérica
+    df["qtdefuncionarios"] = (pd.to_numeric(df["qtdefuncionarios"], errors="coerce").astype("Int64"))
+    
+    # Salva novo arquivo
+    caminho_saida = caminho_arquivo.parent / "ArquivoConvertido.csv"
+    df.to_csv(caminho_saida, index=False, encoding="utf-8", sep=";")
+
+    print(f"\n☑️ Arquivo convertido salvo em {caminho_saida}\n")
